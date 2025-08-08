@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>🍌 BananaS31</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <!-- Monetag SDK -->
+  <script src='//libtl.com/sdk.js' data-zone='9683240' data-sdk='show_9683240'></script>
+  <style>
+    :root{
+      --bg: #e6f2ff; --card:#fff;
+      --p1:#00c6ff; --p2:#0072ff;
+      --a1:#ff9966; --a2:#ff5e62;
+      --muted:#6b7280;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{
+      font-family:"Poppins",system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+      background: linear-gradient(180deg,#eef6ff 0%, #e6f2ff 100%);
+      color:#0f172a; -webkit-font-smoothing:antialiased;
+    }
+    .container{max-width:820px;margin:18px auto 96px;padding:16px}
+    .app-header{background:linear-gradient(90deg,var(--p1),var(--p2));color:#fff;padding:16px;border-radius:12px;text-align:center;font-weight:700;font-size:20px;box-shadow:0 8px 24px rgba(2,6,23,0.08)}
+    .card{background:var(--card);border-radius:14px;padding:18px;margin-top:14px;box-shadow:0 6px 20px rgba(11,22,46,0.06)}
+    .stat{display:flex;justify-content:space-between;align-items:center;padding:10px;border-radius:10px;background:linear-gradient(180deg, rgba(0,198,255,0.06), rgba(0,114,255,0.03));margin-top:10px}
+    .stat .label{color:var(--muted);font-size:13px}
+    .stat .value{font-weight:700;font-size:18px}
+    .notice{margin-top:14px;background:linear-gradient(90deg,#fffaf0,#fffefc);border-radius:10px;padding:12px;border:1px solid #fff4e6}
+    .btn{width:100%;border:none;padding:12px 14px;border-radius:12px;color:#fff;font-weight:700;cursor:pointer;background:linear-gradient(90deg,var(--a1),var(--a2));box-shadow:0 6px 18px rgba(255,95,98,0.12);font-size:15px}
+    .btn.secondary{background:linear-gradient(90deg,var(--p1),var(--p2));box-shadow:0 6px 18px rgba(0,114,255,0.12)}
+    .small{color:var(--muted);font-size:13px}
+    .input,select,textarea{width:100%;padding:12px;border-radius:10px;border:1px solid #e6eef8;margin-top:8px;font-size:15px}
+    .countdown-box{margin-top:12px;border-radius:10px;padding:12px;background:linear-gradient(90deg,#fff,#f7fbff);border:1px solid #eef6ff;text-align:center}
+    .status-fail{color:#d9534f;font-weight:700}
+    .status-ok{color:#138a49;font-weight:700}
+    .bottom-nav{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid #eef4ff;padding:10px 0;display:flex;justify-content:space-around;z-index:40;box-shadow:0 -6px 24px rgba(2,6,23,0.04)}
+    .bottom-nav a{color:var(--muted);font-weight:700;text-decoration:none;font-size:18px;padding:6px 12px}
+    .bottom-nav a.active{color:var(--p2)}
+    @media(min-width:900px){.container{margin-top:28px}.card{padding:22px}}
+    .row{display:flex;gap:12px}
+    .col{flex:1}
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div id="appHeader" class="app-header">🍌 BananaS31</div>
+
+    <!-- HOME -->
+    <section id="home" class="page">
+      <div class="card">
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <div>
+            <div style="font-weight:800;font-size:20px" id="homeName">Hello, User</div>
+            <div class="small" id="homeUsername">@username</div>
+          </div>
+          <div style="text-align:right">
+            <div class="small">Today</div>
+            <div style="font-weight:800;font-size:18px" id="homeProgress">0/25</div>
+          </div>
+        </div>
+
+        <div class="stat">
+          <div class="label">💰 Balance</div>
+          <div class="value" id="homeBalance">0</div>
+        </div>
+
+        <div class="stat">
+          <div class="label">✅ Tasks Completed</div>
+          <div class="value" id="homeCompleted">0</div>
+        </div>
+
+        <div class="notice">
+          <div style="font-weight:700">📢 Join Our Telegram</div>
+          <div style="margin-top:12px">
+            <a href="https://t.me/tretasker" target="_blank" class="btn secondary" style="text-decoration:none;display:block;text-align:center">Join Telegram</a>
+          </div>
+        </div>
+
+        <div style="margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <button id="btnGoTasks" class="btn">🚀 Start Tasks</button>
+          <button id="btnGoWithdraw" class="btn secondary">🏧 Withdraw</button>
+          <button id="btnGoProfile" class="btn" style="grid-column:1/3">👤 View Profile</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- TASKS -->
+    <section id="tasks" class="page" style="display:none">
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div>
+            <div style="font-weight:800" id="taskTitle">Daily Tasks</div>
+            <div class="small">Earn 1 BananaS31 per ad — 25 tasks/day; 每 5 tasks rotate link</div>
+          </div>
+          <div style="text-align:right">
+            <div class="small">Daily limit</div>
+            <div style="font-weight:800;font-size:18px" id="limit">25</div>
+          </div>
+        </div>
+
+        <div class="stat">
+          <div class="label">✅ Completed</div>
+          <div class="value" id="completedCount">0</div>
+        </div>
+
+        <div class="stat">
+          <div class="label">⏳ Remaining</div>
+          <div class="value" id="remainingCount">25</div>
+        </div>
+
+        <div style="margin-top:14px">
+          <button id="startTask" class="btn">🚀 Start Task</button>
+
+          <div class="countdown-box" id="countBox" style="display:none">
+            <div class="small">An ad opened in a new tab. Stay there until countdown ends to earn.</div>
+            <div style="margin-top:10px;font-size:28px;font-weight:800" id="countNum">15</div>
+            <div style="margin-top:10px">
+              <div id="taskStatus" class="small">Status: Waiting...</div>
+              <div style="margin-top:10px;display:flex;gap:10px">
+                <button id="claim" class="btn secondary" style="flex:1">🏁 Claim</button>
+                <button id="cancel" class="btn" style="flex:1;background:#f3f4f6;color:#111">Cancel</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- WITHDRAW -->
+    <section id="withdraw" class="page" style="display:none">
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div>
+            <div style="font-weight:700">Withdraw (Binance)</div>
+            <div class="small">Minimum: 200 BananaS31</div>
+          </div>
+          <div style="text-align:right">
+            <div class="small">Balance</div>
+            <div style="font-weight:800" id="withdrawBal">0</div>
+          </div>
+        </div>
+
+        <div style="margin-top:12px">
+          <label class="small">Method</label>
+          <select id="withdrawMethod" class="input"><option value="Binance">Binance</option></select>
+
+          <label class="small">Amount</label>
+          <input id="withdrawAmount" class="input" type="number" placeholder="Enter amount">
+
+          <label class="small">Binance UID</label>
+          <input id="withdrawUID" class="input" type="text" placeholder="Enter Binance UID">
+
+          <div style="margin-top:12px">
+            <button id="withdrawSubmit" class="btn">💸 Submit Withdraw</button>
+          </div>
+          <div id="withdrawMsg" class="small" style="margin-top:8px"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROFILE -->
+    <section id="profile" class="page" style="display:none">
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div>
+            <div style="font-weight:800" id="pName">Name</div>
+            <div class="small" id="pUsername">@username</div>
+          </div>
+          <div style="text-align:right">
+            <div class="small">User ID</div>
+            <div style="font-weight:700" id="pUserId">-</div>
+          </div>
+        </div>
+
+        <div class="stat" style="margin-top:12px">
+          <div class="label">💰 Balance</div>
+          <div class="value" id="pBalance">0</div>
+        </div>
+
+        <div class="stat" style="margin-top:10px">
+          <div class="label">✅ Completed Today</div>
+          <div class="value" id="pCompleted">0</div>
+        </div>
+
+        <div style="margin-top:12px;text-align:center">
+          <button id="backHome" class="btn">Back Home</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- REFER -->
+    <section id="refer" class="page" style="display:none">
+      <div class="card">
+        <div style="font-weight:700">Refer & Earn</div>
+        <div class="small" style="margin-top:8px">You earn <strong>20%</strong> of each referred user's earned tokens.</div>
+
+        <div style="margin-top:12px">
+          <input id="refLink" class="input" readonly />
+          <div style="margin-top:10px;display:flex;gap:10px">
+            <button id="copyRef" class="btn">Copy Link</button>
+            <a id="shareRef" class="btn secondary" href="#" target="_blank" style="text-decoration:none;display:inline-flex;align-items:center;justify-content:center">Share to Telegram</a>
+          </div>
+          <div style="margin-top:12px" class="small">Referral earnings: <span id="refEarn">0</span> BananaS31</div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <div class="bottom-nav">
+    <a href="#" class="nav active" data-page="home">🏠</a>
+    <a href="#" class="nav" data-page="tasks">📋</a>
+    <a href="#" class="nav" data-page="withdraw">🏧</a>
+    <a href="#" class="nav data" data-page="profile">👤</a>
+    <a href="#" class="nav" data-page="refer">✉️</a>
+  </div>
+
+<script>
+/* ================= CONFIG ================= */
+const ADMIN_BOT_TOKEN = '7553131186:AAHutciXTCWTYnXAWRPJ3mOSXanwX-I5V0c';
+const ADMIN_CHAT_ID = 6682672151;
+const BOT_LINK = 'https://t.me/Tanvirrebot';
+
+const DAILY_LIMIT = 25;
+const COUNTDOWN = 15;
+const REF_RATE = 0.20; // Changed from 0.30 to 0.20 (20% commission)
+
+/* ============== Telegram init fallback ============== */
+if(!window.Telegram || !window.Telegram.WebApp){
+  window.Telegram = { WebApp: { initDataUnsafe: { user: { id: 999999999, first_name: "LocalUser", username: "localtest" }, start_param: null } } };
+}
+const tg = window.Telegram.WebApp;
+try{ if(tg.ready) tg.ready(); } catch(e){}
+const TG_USER = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) ? tg.initDataUnsafe.user : { id: 'guest', first_name: 'Guest', username: '' };
+
+/* ============== Helpers & storage ============== */
+const USER_ID = TG_USER.id;
+const USER_KEY = `banana_user_${USER_ID}`;
+const GLOBAL_NOTICE_KEY = 'banana_notice_v1';
+const TASK_SESSION_KEY = `banana_task_session_${USER_ID}`;
+
+function initUserRecord(){
+  const raw = localStorage.getItem(USER_KEY);
+  if(!raw){
+    const init = { balance:0, completedToday:0, lastReset:new Date().toDateString(), joinedChannel:false, refBy:null, refEarn:0 };
+    localStorage.setItem(USER_KEY, JSON.stringify(init));
+    return init;
+  }
+  const s = JSON.parse(raw);
+  if(s.lastReset !== new Date().toDateString()){
+    s.completedToday = 0;
+    s.lastReset = new Date().toDateString();
+  }
+  s.balance = s.balance || 0;
+  s.completedToday = s.completedToday || 0;
+  s.joinedChannel = !!s.joinedChannel;
+  s.refBy = s.refBy || null;
+  s.refEarn = s.refEarn || 0;
+  return s;
+}
+function saveUser(s){ localStorage.setItem(USER_KEY, JSON.stringify(s)); }
+function loadUser(){ return initUserRecord(); }
+
+/* ============== Referral from start param ============== */
+(function handleStartParam(){
+  const urlParams = new URLSearchParams(window.location.search);
+  const startUrl = urlParams.get('start');
+  const tgStart = (tg && tg.initDataUnsafe && tg.initDataUnsafe.start_param) ? tg.initDataUnsafe.start_param : null;
+  const ref = startUrl || tgStart || null;
+  if(!ref) return;
+  const s = loadUser();
+  if(!s.refBy && String(ref) !== String(USER_ID)){
+    s.refBy = String(ref);
+    saveUser(s);
+    const listKey = `ref_list_${ref}`;
+    const arr = JSON.parse(localStorage.getItem(listKey) || '[]');
+    if(!arr.includes(String(USER_ID))){ arr.push(String(USER_ID)); localStorage.setItem(listKey, JSON.stringify(arr)); }
+  }
+})();
+
+/* ============== UI refs ============== */
+const pages = { home: document.getElementById('home'), tasks: document.getElementById('tasks'), withdraw: document.getElementById('withdraw'), profile: document.getElementById('profile'), refer: document.getElementById('refer') };
+const navEls = document.querySelectorAll('.bottom-nav .nav, .bottom-nav a, .nav');
+document.querySelectorAll('.bottom-nav a').forEach(a=>{
+  a.addEventListener('click', e=>{
+    e.preventDefault();
+    const page = a.getAttribute('data-page');
+    showPage(page);
+  });
+});
+
+// Buttons & elements
+const el = {
+  appHeader: document.getElementById('appHeader'),
+  homeName: document.getElementById('homeName'),
+  homeUsername: document.getElementById('homeUsername'),
+  homeBalance: document.getElementById('homeBalance'),
+  homeCompleted: document.getElementById('homeCompleted'),
+  homeProgress: document.getElementById('homeProgress'),
+  btnGoTasks: document.getElementById('btnGoTasks'),
+  btnGoWithdraw: document.getElementById('btnGoWithdraw'),
+  btnGoProfile: document.getElementById('btnGoProfile'),
+
+  // tasks
+  completedCount: document.getElementById('completedCount'),
+  remainingCount: document.getElementById('remainingCount'),
+  limit: document.getElementById('limit'),
+  startTask: document.getElementById('startTask'),
+  countBox: document.getElementById('countBox'),
+  countNum: document.getElementById('countNum'),
+  taskStatus: document.getElementById('taskStatus'),
+  claimBtn: document.getElementById('claim'),
+  cancelBtn: document.getElementById('cancel'),
+
+  // withdraw
+  withdrawBal: document.getElementById('withdrawBal'),
+  withdrawAmount: document.getElementById('withdrawAmount'),
+  withdrawUID: document.getElementById('withdrawUID'),
+  withdrawSubmit: document.getElementById('withdrawSubmit'),
+  withdrawMsg: document.getElementById('withdrawMsg'),
+
+  // profile
+  pName: document.getElementById('pName'),
+  pUsername: document.getElementById('pUsername'),
+  pUserId: document.getElementById('pUserId'),
+  pBalance: document.getElementById('pBalance'),
+  pCompleted: document.getElementById('pCompleted'),
+  backHome: document.getElementById('backHome'),
+
+  // refer
+  refLink: document.getElementById('refLink'),
+  copyRef: document.getElementById('copyRef'),
+  shareRef: document.getElementById('shareRef'),
+  refEarn: document.getElementById('refEarn')
+};
+
+/* ============== Navigation ============== */
+function showPage(key){
+  Object.keys(pages).forEach(k => pages[k].style.display = (k===key)?'block':'none');
+  document.querySelectorAll('.bottom-nav a').forEach(a => a.classList.toggle('active', a.getAttribute('data-page')===key));
+  el.appHeader.textContent = key==='home' ? '🍌 BananaS31' : key==='tasks' ? '📋 Task Center' : key==='withdraw' ? '🏧 Withdraw' : key==='profile' ? '👤 Profile' : '📧 Refer';
+}
+el.btnGoTasks.addEventListener('click', ()=> showPage('tasks'));
+el.btnGoWithdraw.addEventListener('click', ()=> showPage('withdraw'));
+el.btnGoProfile.addEventListener('click', ()=> showPage('profile'));
+el.backHome.addEventListener('click', ()=> showPage('home'));
+
+/* ============== Update UI from storage ============== */
+function updateUI(){
+  const s = loadUser();
+  el.homeName.textContent = `Hello, ${TG_USER.first_name || TG_USER.username || 'User'}`;
+  el.homeUsername.textContent = TG_USER.username ? '@' + TG_USER.username : '';
+  el.homeBalance.textContent = parseFloat(s.balance).toFixed(2);
+  el.homeCompleted.textContent = s.completedToday;
+  el.homeProgress.textContent = `${s.completedToday}/${DAILY_LIMIT}`;
+
+  el.completedCount.textContent = s.completedToday;
+  el.remainingCount.textContent = Math.max(0, DAILY_LIMIT - s.completedToday);
+  el.limit.textContent = DAILY_LIMIT;
+
+  el.withdrawBal.textContent = parseFloat(s.balance).toFixed(2);
+
+  el.pName.textContent = TG_USER.first_name || TG_USER.username || 'User';
+  el.pUsername.textContent = TG_USER.username ? '@' + TG_USER.username : '';
+  el.pUserId.textContent = USER_ID;
+  el.pBalance.textContent = parseFloat(s.balance).toFixed(2);
+  el.pCompleted.textContent = s.completedToday;
+
+  const refLink = BOT_LINK + `?start=${USER_ID}`;
+  el.refLink.value = refLink;
+  el.shareRef.href = `https://t.me/share/url?url=${encodeURIComponent(refLink)}&text=${encodeURIComponent("Join BananaS31 and earn rewards! " + refLink)}`;
+  el.refEarn.textContent = (s.refEarn || 0).toFixed(2);
+}
+updateUI();
+
+/* ============== Start Task flow (strict countdown) ============== */
+let timer = null;
+let remaining = COUNTDOWN;
+let session = null;
+
+function startTaskFlow(){
+  const s = loadUser();
+  if(s.completedToday >= DAILY_LIMIT){ 
+    alert("You've reached today's limit."); 
+    return; 
+  }
+
+  cleanupSession();
+
+  remaining = COUNTDOWN;
+  el.countNum.textContent = remaining;
+  el.taskStatus.textContent = `Watch the ad for ${COUNTDOWN} seconds to earn!`;
+  el.countBox.style.display = 'block';
+
+  // Show Monetag Rewarded Interstitial Ad
+  show_9683240().then(() => {
+    // User watched the ad successfully
+    session = { startedAt: Date.now(), completed: true };
+    sessionStorage.setItem(TASK_SESSION_KEY, JSON.stringify(session));
+
+    el.taskStatus.textContent = "✅ Ad watched! Click Claim to get your reward.";
+    el.taskStatus.className = 'small status-ok';
+
+    // Stop the countdown if it's still running
+    if(timer) {
+      clearInterval(timer);
+      timer = null;
+    }
+  }).catch(error => {
+    // Ad failed or was closed early
+    console.error("Ad error:", error);
+    el.taskStatus.textContent = "⛔ Ad not completed - please try again.";
+    el.taskStatus.className = 'small status-fail';
+    cleanupSession();
+  });
+
+  // Start countdown
+  timer = setInterval(()=>{
+    remaining--;
+    el.countNum.textContent = remaining;
+    if(remaining <= 0){
+      clearInterval(timer);
+      if(!session || !session.completed) {
+        el.taskStatus.textContent = "⛔ Time's up! Please watch the ad completely.";
+        el.taskStatus.className = 'small status-fail';
+      }
+    }
+  },1000);
+}
+
+el.startTask.addEventListener('click', startTaskFlow);
+
+/* Claim */
+el.claimBtn.addEventListener('click', ()=>{
+  const sess = JSON.parse(sessionStorage.getItem(TASK_SESSION_KEY) || '{}');
+  if(sess && sess.completed){
+    awardTask();
+    cleanupSession();
+    alert("🎉 Task completed! +1 BananaS31");
+  } else {
+    alert("Please complete watching the ad first.");
+  }
+});
+
+/* Cancel */
+el.cancelBtn.addEventListener('click', ()=>{
+  if(timer) { clearInterval(timer); timer = null; }
+  cleanupSession();
+});
+
+function cleanupSession(){
+  sessionStorage.removeItem(TASK_SESSION_KEY);
+  el.countBox.style.display = 'none';
+  el.countNum.textContent = COUNTDOWN;
+  el.taskStatus.textContent = 'Status: Waiting...';
+  el.taskStatus.className = 'small';
+}
+
+/* Award task (NO admin notification) */
+function awardTask(){
+  const s = loadUser();
+  s.balance = parseFloat((s.balance + 1).toFixed(2));
+  s.completedToday = (s.completedToday || 0) + 1;
+  s.lastReset = new Date().toDateString();
+
+  if(s.refBy){
+    const commission = parseFloat((1 * REF_RATE).toFixed(2));
+    const refKey = `banana_user_${s.refBy}`;
+    const rraw = localStorage.getItem(refKey);
+    let r = rraw ? JSON.parse(rraw) : { balance:0, refEarn:0 };
+    r.balance = parseFloat((r.balance + commission).toFixed(2));
+    r.refEarn = parseFloat(((r.refEarn || 0) + commission).toFixed(2));
+    localStorage.setItem(refKey, JSON.stringify(r));
+  }
+
+  saveUser(s);
+  updateUI();
+}
+
+/* ============== Withdraw submit (ONLY withdraw details) ============== */
+el.withdrawSubmit.addEventListener('click', ()=>{
+  const amount = parseFloat(el.withdrawAmount.value);
+  const uid = (el.withdrawUID.value || '').trim();
+
+  if(!amount || !uid){ 
+    alert("Please fill amount and Binance UID"); 
+    return; 
+  }
+
+  if(amount < 200){ 
+    alert("Minimum withdraw is 200 BananaS31"); 
+    return; 
+  }
+
+  const s = loadUser();
+
+  if(amount > s.balance){ 
+    alert("Not enough balance"); 
+    return; 
+  }
+
+  const withdrawData = {
+    amount: amount,
+    binanceUID: uid,
+    userId: USER_ID,
+    timestamp: new Date().toISOString()
+  };
+
+  fetch(`https://api.telegram.org/bot${ADMIN_BOT_TOKEN}/sendMessage`, {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({
+      chat_id: ADMIN_CHAT_ID,
+      text: `📤 Withdraw Request\n\n` +
+            `• Amount: ${withdrawData.amount}\n` +
+            `• Binance UID: ${withdrawData.binanceUID}\n` +
+            `• User ID: ${withdrawData.userId}\n` +
+            `• Time: ${new Date().toLocaleString()}`
+    })
+  }).then(() => {
+    s.balance = parseFloat((s.balance - amount).toFixed(2));
+    saveUser(s);
+    updateUI();
+    el.withdrawMsg.textContent = "✅ Withdraw request sent!";
+  }).catch(err => {
+    console.error(err);
+    el.withdrawMsg.textContent = "⚠️ Error sending request";
+  });
+});
+
+/* ============== Ref copy/share ============== */
+el.copyRef.addEventListener('click', ()=>{
+  navigator.clipboard.writeText(el.refLink.value).then(()=> alert("Referral link copied!"));
+});
+
+/* ============== Init ============== */
+updateUI();
+showPage('home');
+
+/* Debug helpers */
+window._Banana = { loadUser, saveUser, updateUI };
+</script>
+</body>
+</html>
